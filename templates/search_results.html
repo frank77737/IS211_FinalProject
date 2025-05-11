@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results Page {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Search Results for Multiple ISBNs: {{ isbn }}</h2>
+    
+    {% if books %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for book in books %}
+                <div class="col">
+                    <div class="card h-100 book-card shadow">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            {% if book.thumbnail_url %}
+                            <img src="{{ book.thumbnail_url }}" alt="{{ book.title }} cover" class="book-thumbnail">
+                            {% endif %}
+                            <h6 class="card-subtitle mb-2 text-muted">Author: {{ book.author }}</h6>
+                            <p class="card-text">
+                                <small class="text-muted">ISBN: {{ book.isbn }}</small><br>
+                                {% if book.page_count %}
+                                    <small class="text-muted">Pages: {{ book.page_count }}</small><br>
+                                {% endif %}
+                                {% if book.rating %}
+                                    <small class="text-muted">Rating: {{ "%.1f"|format(book.rating) }}/5.0</small><br>
+                                {% endif %}
+                                {% if book.published_date %}
+                                    <small class="text-muted">Published: {{ book.published_date }}</small><br>
+                                {% endif %}
+                                {% if book.category %}
+                                    <small class="text-muted">Category: {{ book.category }}</small>
+                                {% endif %}
+                            </p>
+                            <form method="POST" action="{{ url_for('add_selected_book') }}">
+                                <input type="hidden" name="isbn" value="{{ book.isbn }}">
+                                <input type="hidden" name="title" value="{{ book.title }}">
+                                <input type="hidden" name="author" value="{{ book.author }}">
+                                <input type="hidden" name="page_count" value="{{ book.page_count }}">
+                                <input type="hidden" name="rating" value="{{ book.rating }}">
+                                <input type="hidden" name="published_date" value="{{ book.published_date }}">
+                                <input type="hidden" name="category" value="{{ book.category }}">
+                                <input type="hidden" name="thumbnail_url" value="{{ book.thumbnail_url }}">
+                                <button type="submit" class="btn btn-primary">Confirm to Add to Collection</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Error: No books found for this ISBN. Please try another ISBN number or use sample number from read me.
+        </div>
+    {% endif %}
+    
+    <div class="mt-4">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Go Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %} 

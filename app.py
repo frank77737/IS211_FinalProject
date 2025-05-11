@@ -130,8 +130,52 @@ def search_book():
             flash(f'Book with ISBN {isbn} not found in the Google Books database. Please verify the ISBN number.')
             return redirect(url_for('dashboard'))
         
-        book_data = data['items'][0]['volumeInfo']
-        # print(f"Book data: {book_data}")  
+        # Change to a for loop to process potential multiple results of the same ISBN
+        books = []
+        for item in data['items']:
+            book_data = item['volumeInfo']
+            book = {
+                'isbn': isbn,
+                'title': book_data.get('title', 'Unknown Title'),
+                'author': ', '.join(book_data.get('authors', ['Unknown Author'])),
+                'page_count': book_data.get('pageCount', 0),
+                'rating': book_data.get('averageRating', 0.0),
+                'published_date': book_data.get('publishedDate', 'Unknown'),
+                'category': ', '.join(book_data.get('categories', ['Uncategorized'])),
+                'thumbnail_url': book_data.get('imageLinks', {}).get('thumbnail', '')
+            }
+            books.append(book)
+        
+        return render_template('search_results.html', books=books, isbn=isbn)
+        
+    except Exception as e:
+        flash(f'Error: {str(e)}')
+        return redirect(url_for('dashboard'))
+
+@app.route('/add_selected_book', methods=['POST'])
+@login_required
+def add_selected_book():
+    try:
+        # Get data from the form and ensure it is not empty to avoid errors 
+        isbn = request.form.get('isbn', '')
+        title = request.form.get('title', 'Unknown Title')
+        author = request.form.get('author', 'Unknown Author')
+        page_count = request.form.get('page_count', '0')
+        rating = request.form.get('rating', '0.0')
+        published_date = request.form.get('published_date', 'Unknown')
+        category = request.form.get('category', 'Uncategorized')
+        thumbnail_url = request.form.get('thumbnail_url', '')
+        
+       # ensure the page_count and rating are integers
+        try:
+            page_count = int(page_count)
+        except ValueError:
+            page_count = 0
+            
+        try:
+            rating = float(rating)
+        except ValueError:
+            rating = 0.0
         
         db = get_db()
         
@@ -152,18 +196,18 @@ def search_book():
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             isbn,
-            book_data.get('title', 'Unknown Title'),
-            ', '.join(book_data.get('authors', ['Unknown Author'])),
-            book_data.get('pageCount', 0),
-            book_data.get('averageRating', 0.0),
-            book_data.get('publishedDate', 'Unknown'),
-            ', '.join(book_data.get('categories', ['Uncategorized'])),
-            book_data.get('imageLinks', {}).get('thumbnail', ''),
+            title,
+            author,
+            page_count,
+            rating,
+            published_date,
+            category,
+            thumbnail_url,
             session['user_id'],
             current_date
         ))
         db.commit()
-        flash(f'Book "{book_data.get("title", "Unknown Title")}" added successfully!')
+        flash(f'Book "{title}" added successfully!')
     except Exception as e:
         flash(f'Error: {str(e)}')
     
