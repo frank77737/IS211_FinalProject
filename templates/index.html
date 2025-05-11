@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4 mb-4">Final Project Book Catalogue</h1>
+    <p class="lead mb-4">Book tracking application</p>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg px-4 gap-3">Login</a>
+        <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg px-4">Register</a>
+    </div>
+</div>
+{% endblock %} 
