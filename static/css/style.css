@@ -157,4 +157,18 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--secondary-purple);
+}
+
+.book-thumbnail {
+    max-width: 150px;
+    height: auto;
+    margin: 0 auto 1rem;
+    display: block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+}
+
+.book-thumbnail:hover {
+    transform: scale(1.05);
 } 

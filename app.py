@@ -124,7 +124,7 @@ def search_book():
         with urllib.request.urlopen(url) as response:
             response_data = response.read().decode('utf-8')
             data = json.loads(response_data)
-            print(f"API Response: {data}")  
+            # print(f"API Response: {data}")  
         
         if 'items' not in data:
             flash(f'Book with ISBN {isbn} not found in the Google Books database. Please verify the ISBN number.')
@@ -148,17 +148,17 @@ def search_book():
         # Add new book with formatted date
         current_date = datetime.now().strftime('%Y-%m-%d')
         db.execute('''
-            INSERT INTO books (isbn, title, author, page_count, rating, published_date, category, user_id, date_added)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO books (isbn, title, author, page_count, rating, published_date, category, thumbnail_url, user_id, date_added)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             isbn,
-            # The get method is used to handle the case where the book data for the field does not exist so it does not throw an error
             book_data.get('title', 'Unknown Title'),
             ', '.join(book_data.get('authors', ['Unknown Author'])),
             book_data.get('pageCount', 0),
             book_data.get('averageRating', 0.0),
             book_data.get('publishedDate', 'Unknown'),
             ', '.join(book_data.get('categories', ['Uncategorized'])),
+            book_data.get('imageLinks', {}).get('thumbnail', ''),
             session['user_id'],
             current_date
         ))
@@ -217,6 +217,7 @@ if __name__ == '__main__':
                 rating REAL,
                 published_date TEXT,
                 category TEXT,
+                thumbnail_url TEXT,
                 user_id INTEGER NOT NULL,
                 date_added TEXT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users (id)

@@ -7,6 +7,12 @@ The application allows a user to login and type in an ISBN, which will instigate
 search using the Google Books API. The server will save some of the information to a 
 database, which will be used to show the user their list of books. 
 
+###Sample ISBN numbers 
+- 9780857197689
+- 9781438236667
+- 9780307453389
+- 9781451648546
+
 # To run the web app
 ```bash
 python app.py
