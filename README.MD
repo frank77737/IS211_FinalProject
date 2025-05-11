@@ -8,10 +8,14 @@ search using the Google Books API. The server will save some of the information 
 database, which will be used to show the user their list of books. 
 
 ###Sample ISBN numbers 
-- 9780857197689
-- 9781438236667
-- 9780307453389
-- 9781451648546
+- 9780857197689 - The Psychology of Money
+- 9781438236667 - Practical Guide to Quantitative Finance Interviews
+- 9780307453389 - The Quants
+- 9781451648546 - Steve Jobs
+
+Credentials to see databae with book loaded already or you can register for a account to add books  
+username: frank password: 123456
+
 
 # To run the web app
 ```bash

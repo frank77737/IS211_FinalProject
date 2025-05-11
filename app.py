@@ -269,3 +269,5 @@ if __name__ == '__main__':
         ''')
         db.commit()
     app.run(debug=True) 
+    # Use below to run on internet, then comment out the above line
+    # app.run(host='0.0.0.0', port=5000)
